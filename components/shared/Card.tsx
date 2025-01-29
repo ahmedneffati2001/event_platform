@@ -1,6 +1,6 @@
 import { IEvent } from '@/lib/database/models/event.model'
 import { formatDateTime } from '@/lib/utils'
-import { auth } from '@clerk/nextjs'
+import { useSession } from '@clerk/nextjs' // Importez useSession au lieu de useAuth
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -13,8 +13,11 @@ type CardProps = {
 }
 
 const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
-  const { sessionClaims } = auth();
-  const userId = sessionClaims?.userId as string;
+  // Utilisez useSession pour obtenir la session actuelle
+  const { session } = useSession();  // Accédez à la session de l'utilisateur
+
+  // Vérifiez si la session existe et récupérez l'ID de l'utilisateur
+  const userId = session?.user.id;  // Récupérez l'ID de l'utilisateur
 
   const isEventCreator = userId === event.organizer._id.toString();
 
